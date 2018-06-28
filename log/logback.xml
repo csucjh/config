@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+
+<!--
+	scan:
+	当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+	scanPeriod:
+	设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。
+	debug:
+	当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
+-->
+<configuration scan="true" scanPeriod="60 second" debug="false">
+	<!-- 每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用<contextName>设置成其他名字，用于区分不同应用程序的记录 -->
+	<property name="ApplicationName" value="legalservice" />
+	<contextName>${ApplicationName}</contextName>
+
+	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+	<property name="LOG_HOME" value="/opt/logs/legalservice" />
+
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8" />
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--
+				%d{yyyy-MM-dd HH:mm:ss}表示日期
+				%thread表示线程名
+				%-5level日志级别，从左显示5个字符宽度
+				%logger{50}表示输出日志的包名
+				%msg：日志消息，%n是换行符
+			-->
+			<pattern>[%thread] %-5level %logger{50} - %msg%n</pattern>
+		</layout>
+	</appender>
+
+
+	<!-- 按照每天生成日志文件 -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder charset="UTF-8" />
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${LOG_HOME}/${ApplicationName}_log.%d{yyyy-MM-dd}.txt</FileNamePattern>
+			<!-- 保持30天日志历史 -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n</Pattern>
+		</layout>
+	</appender>
+
+
+	<!-- 日志输出级别 -->
+	<root level="debug">
+		<!----><appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+	<!-- 开源包日志控制 -->
+	<!--<logger name="org.springframework" level="WARN" additivity="false" />
+	<logger name="org.mybatis.spring" level="ERROR" additivity="false" />
+	<logger name="org.quartz.core.QuartzSchedulerThread" level="INFO" additivity="false" />
+	<logger name="com.czgps.mapper" level="ERROR" additivity="false" />
+
+	<logger name="com.ibatis" level="ERROR" additivity="false" />
+	<logger name="com.ibatis.common.jdbc.SimpleDataSource" level="ERROR" additivity="false" />
+	<logger name="com.ibatis.common.jdbc.ScriptRunner" level="ERROR" additivity="false" />
+	<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="ERROR" additivity="false" />
+	<logger name="java.sql.Connection" level="ERROR" additivity="false" />
+	<logger name="java.sql.ResultSet" level="ERROR" additivity="false" />
+	<logger name="java.sql.Statement" level="ERROR" additivity="false" />
+	<logger name="java.sql.PreparedStatement" level="ERROR" additivity="false" /> -->
+</configuration>

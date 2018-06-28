@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd  
+                http://www.springframework.org/schema/context  
+                http://www.springframework.org/schema/context/spring-context-4.2.xsd  
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd"
+>
+	<!-- 使用mybatis方式持久化数据 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 当mybatis的xml文件和mapper接口不在相同包下时，需要用mapperLocations属性指定xml文件的路径。 *是个通配符，代表所有的文件 -->
+		<property name="mapperLocations" value="classpath:czgps/app/mybatis/*.xml" />
+	</bean>
+
+	<!-- mybatis批量扫描，扫描出mapper接口自动创建代理对象并在Spring容器中注册 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描出的mapper对应的bean的id是类型名(首字母必须小写) -->
+		<property name="basePackage" value="com.csucjh.dal.mapper" />
+		<!-- Spring整合Mybatis是会出现加载jdbc参数异常(因为配置文件加载问题) -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	<!-- Mybatis配置结束 -->
+
+	<!-- 事务配置开始 -->
+	<!-- 数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${pool.initialSize}" />
+		<property name="maxActive" value="${pool.maxActive}" />
+		<property name="maxIdle" value="${pool.maxIdle}" />
+		<property name="minIdle" value="${pool.minIdle}" />
+	</bean>
+
+	<!-- 事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 事务配置结束 -->
+</beans>  

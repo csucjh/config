@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+                http://www.springframework.org/schema/context  
+                http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 使用mybatis方式持久化数据 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="configLocation" value="classpath:mybatis-config.xml" /> -->
+		<!-- 当mybatis的xml文件和mapper接口不在相同包下时，需要用mapperLocations属性指定xml文件的路径。 *是个通配符，代表所有的文件 -->
+		<property name="mapperLocations" value="classpath:mapping/*.xml" />
+	</bean>
+
+	<!-- mybatis批量扫描，扫描出mapper接口自动创建代理对象并在Spring容器中注册 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描出的mapper对应的bean的id是类型名(首字母必须小写) -->
+		<property name="basePackage" value="com.csucjh.dal.mapper" />
+		<!-- Spring整合Mybatis是会出现加载jdbc参数异常(因为配置文件加载问题) -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	<!-- Mybatis配置结束 -->
+
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc.initialsize}" />
+		<property name="minIdle" value="${jdbc.minidle}" />
+		<property name="maxActive" value="${jdbc.maxactive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${jdbc.maxwait}" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接(空闲连接检测周期)，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.evictionrunsmillis}" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${jdbc.evictableidletimemillis}" />
+
+		<!-- 用来检测连接是否有效的sql，要求是一个查询语句 -->
+		<property name="validationQuery" value="${jdbc.validationquery}" />
+
+		<!-- 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。 -->
+		<property name="testWhileIdle" value="${jdbc.testwhileidle}" />
+		<!-- 申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnBorrow" value="${jdbc.testonborrow}" />
+		<!-- 归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnReturn" value="${jdbc.testonreturn}" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="stat" />
+		<!-- 定时输出统计信息到日志中 -->
+		<property name="timeBetweenLogStatsMillis" value="${jdbc.timebetweenlogstatsmillis}" />
+		<!-- <property name="statLogger" ref="druidStatLogger" /> -->
+	</bean>
+
+	<!-- 事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>  

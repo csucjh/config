@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<!--一般不在这里指定数据库驱动，最好在pom.xml中mybatis-generator-maven-plugin插件下依赖驱动 -->
+	<!-- 集合maven插件时，需要配置mvn mybatis-generator:generate指令 -->
+	<context id="context1" targetRuntime="MyBatis3">
+		<!-- 生成的Java文件的编码 -->
+		<property name="javaFileEncoding" value="UTF-8" />
+		<!-- 格式化java代码 -->
+		<property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter" />
+		<!-- 格式化XML代码 -->
+		<property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
+
+		<!-- 是否重写方法 -->
+		<!--
+			<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
+			<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+			<plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
+		-->
+
+		<commentGenerator>
+			<!-- 这个元素用来去除指定生成的注释中是否包含生成的日期 false:表示保护 -->
+			<!-- 如果生成日期，会造成即使修改一个字段，整个实体类所有属性都会发生变化，不利于版本控制，所以设置为true -->
+			<property name="suppressDate" value="true" />
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		
+		<!--这几个属性名在pom.xml中配置-->
+		<jdbcConnection driverClass="${mybatis.generator.jdbcDriver}"
+						connectionURL="${mybatis.generator.jdbcURL}"
+						userId="${mybatis.generator.jdbcUserId}"
+						password="${mybatis.generator.jdbcPassword}"/>
+
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.csucjh.dal.model" targetProject="src\main\java">
+			<!-- for MyBatis3/MyBatis3Simple 自动为每一个生成的类创建一个构造方法，构造方法包含了所有的field；而不是使用setter； -->
+			<property name="constructorBased" value="false" />
+			<property name="enableSubPackages" value="true" />
+		</javaModelGenerator>
+
+
+		<!-- 生成映射文件的包名和位置 -->
+		<sqlMapGenerator targetPackage="mapping" targetProject="src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+
+		<!-- 生成DAO的包名和位置 -->
+		<javaClientGenerator targetPackage="com.csucjh.dal.mapper" targetProject="src\main\java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+
+		<!-- 要生成哪些表 -->
+		<!-- domainObjectName：制定后可以统一去除前缀 -->
+		<!-- domain字段的命名规则，false:默认为驼峰命名 true:按数据库真实命名 -->
+		<!-- <table tableName="t_table" domainObjectName="TableModel" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false">
+			<property name="t_table" value="true" />
+		</table>
+		-->
+
+	</context>
+</generatorConfiguration>

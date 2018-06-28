@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>   
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">   
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<!--******************************-->
+	<!-- console define -->
+	<!--******************************-->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern"     
+                value="[%d{dd HH:mm:ss,SSS\} %-5p] [%t] %c{2\} [%X{traceId}] - %m%n" />  
+        </layout>  
+
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">  
+            <param name="levelMin" value="trace" />  
+            <param name="levelMax" value="ERROR" />  
+            <param name="AcceptOnMatch" value="true" />  
+        </filter>  
+    </appender>  
+	
+
+	<!--******************************-->
+	<!-- log file define -->
+	<!--******************************-->
+	<appender name="ALL-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">  
+		<param name="encoding" value="UTF-8"/>
+        <param name="File" value="/opt/logs/default-all.log" />    
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH" />    
+        <layout class="org.apache.log4j.PatternLayout">  
+         <param name="ConversionPattern"    
+            value="[%-5p] %d{yyyy-MM-dd HH:mm:ss,SSS} [%X{traceId}] method:%l%n%m%n" />  
+        </layout>    
+    </appender>
+	<appender name="DAL-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">  
+		<param name="encoding" value="UTF-8"/>
+        <param name="File" value="/opt/logs/common-dal.log" />    
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH" />    
+        <layout class="org.apache.log4j.PatternLayout">  
+         <param name="ConversionPattern"    
+            value="[%-5p] %d{yyyy-MM-dd HH:mm:ss,SSS} [%X{traceId}]  method:%l%n%m%n" />  
+        </layout>    
+    </appender>	
+	<appender name="ERROR-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">  
+		<param name="encoding" value="UTF-8"/>
+        <param name="File" value="/opt/logs/common-error.log" />
+		<param name="Threshold" value="error" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+        <layout class="org.apache.log4j.PatternLayout">  
+         <param name="ConversionPattern"    
+            value="[%-5p] %d{yyyy-MM-dd HH:mm:ss,SSS} [%X{traceId}]  method:%l%n%m%n" />  
+        </layout>    
+    </appender>
+    <appender name="NORMAL-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">  
+		<param name="encoding" value="UTF-8"/>
+        <param name="File" value="/opt/logs/ma-normal.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+        <layout class="org.apache.log4j.PatternLayout">  
+         <param name="ConversionPattern"    
+            value="[%-5p] %d{yyyy-MM-dd HH:mm:ss,SSS} [%X{traceId}]  method:%l%n%m%n" />  
+        </layout>    
+    </appender>
+    <appender name="INTEGRATION-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">  
+		<param name="encoding" value="UTF-8"/>
+        <param name="File" value="/opt/logs/ma-integration.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+        <layout class="org.apache.log4j.PatternLayout">  
+         <param name="ConversionPattern"    
+            value="[%-5p] %d{yyyy-MM-dd HH:mm:ss,SSS} [%X{traceId}]  method:%l%n%m%n" />  
+        </layout>    
+    </appender>
+	<appender name="CACHE-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="File" value="/opt/logs/common-cache.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[%-5p] %d{yyyy-MM-dd HH:mm:ss,SSS} [%X{traceId}]  method:%l%n%m%n" />
+		</layout>
+	</appender>
+	
+	<!--******************************-->
+	<!-- dispatch to the log file -->
+	<!--******************************-->
+	<logger name="com.ibatis" additivity="true">  
+        <level value="warn"/>    
+        <appender-ref ref="DAL-APPENDER" />
+		<appender-ref ref="ERROR-APPENDER" />
+    </logger>
+	<logger name="java.sql" additivity="true">  
+        <level value="warn"/>    
+        <appender-ref ref="DAL-APPENDER" />
+		<appender-ref ref="ERROR-APPENDER" />
+    </logger>
+	<logger name="org.springframework" additivity="true">  
+        <level value ="info"/>    
+        <appender-ref ref="ALL-APPENDER" />
+		<appender-ref ref="ERROR-APPENDER" />
+		<!-- <appender-ref ref="Asyn-APPENDER" /> -->
+    </logger>
+    <logger name="org.apache.activemq" additivity="true">
+        <level value="info" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+	<!--******************************-->
+	<!-- the root set-->
+	<!--******************************-->
+	<root>  
+        <level value="trace"/>  
+        <appender-ref ref="ALL-APPENDER" />
+		<appender-ref ref="CONSOLE" />
+        <appender-ref ref="ERROR-APPENDER"/>
+    </root> 
+
+</log4j:configuration>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<!-- 问答提问过期退款 start -->
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="askAnswerOverdueRefund_Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 引用统一处理类 -->
+		<property name="targetObject">
+			<ref bean="quartzHandler" />
+		</property>
+		<!-- 处理类中对应的处理方法 -->
+		<property name="targetMethod">
+			<value>askAnswerOverdueRefund</value>
+		</property>
+	</bean>
+
+	<!-- 定时任务的处理周期 -->
+	<bean id="askAnswerOverdueRefund_Timer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="askAnswerOverdueRefund_Job" />
+		</property>
+		<!-- cron表达式 [秒] [分] [小时] [日] [月] [周] [年] -->
+		<property name="cronExpression">
+			<!-- 30分钟一次 -->
+			<value>0 */30 * * * ?</value>
+		</property>
+	</bean>
+	<!-- 问答提问过期退款 end -->
+
+	<bean id="withdraw_Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 引用统一处理类 -->
+		<property name="targetObject">
+			<ref bean="quartzHandler" />
+		</property>
+		<!-- 处理类中对应的处理方法 -->
+		<property name="targetMethod">
+			<value>withdrawals</value>
+		</property>
+	</bean>
+
+	<!-- 定时任务的处理周期 -->
+	<bean id="withdraw_Timer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="withdraw_Job" />
+		</property>
+		<!-- cron表达式 [秒] [分] [小时] [日] [月] [周] [年] -->
+		<property name="cronExpression">
+			<!-- 每天2点 -->
+			<value>0 0 2 * * ?</value>
+		</property>
+	</bean>
+
+	<!-- 专栏订阅到期 start -->
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="columnSubOutDate_Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 引用统一处理类 -->
+		<property name="targetObject">
+			<ref bean="quartzHandler" />
+		</property>
+		<!-- 处理类中对应的处理方法 -->
+		<property name="targetMethod">
+			<value>columnSubOutDate</value>
+		</property>
+	</bean>
+
+	<!-- 定时任务的处理周期 -->
+	<bean id="columnSubOutDate_Timer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="columnSubOutDate_Job" />
+		</property>
+		<!-- cron表达式 [秒] [分] [小时] [日] [月] [周] [年] -->
+		<property name="cronExpression">
+			<!-- 每天零点执行一次 -->
+			<value>0 0 0 */1 * ?</value>
+		</property>
+	</bean>
+	<!-- 专栏订阅到期 end -->
+
+
+	<!-- 以下部分是统一管理 -->
+	<!-- 统一定时处理类 -->
+	<bean id="quartzHandler" class="czgps.app.controller.QuartzHandler"></bean>
+
+	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!-- 问答提问过期退款 -->
+				<ref bean="askAnswerOverdueRefund_Timer" />
+
+				<ref bean="withdraw_Timer" />
+
+				<ref bean="columnSubOutDate_Timer" />
+			</list>
+		</property>
+		<!-- 这里自定义配置文件 -->
+		<property name="configLocation" value="classpath:quartz.properties" />
+	</bean>
+</beans>

@@ -1,0 +1,13 @@
+[user]
+	name = csucjh
+	email = jianhong.chen@56qq.com
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+[core]
+	autocrlf = true
+	excludesfile = C:\\Users\\chenjianhong\\Documents\\gitignore_global.txt
+[difftool "sourcetree"]
+	cmd = 'D:/developer/BCompare/BComp.exe' \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+	cmd = 'D:/developer/BCompare/BComp.exe' \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	trustExitCode = true

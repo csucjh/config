@@ -3,11 +3,26 @@
 	email = csucjh@163.com
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
 [core]
 	autocrlf = true
-	excludesfile = 
+	excludesfile =
+	preloadindex = true
+	fscache = true
 [difftool "sourcetree"]
 	cmd = 'D:/developer/BCompare/BComp.exe' \"$LOCAL\" \"$REMOTE\"
 [mergetool "sourcetree"]
 	cmd = 'D:/developer/BCompare/BComp.exe' \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
 	trustExitCode = true
+[gc]
+	auto = 256
+[pull]
+	rebase = true
+[i18n]
+	commitencoding = utf-8
+	logoutputencoding = utf-8
+[gui]
+	encoding = utf-8

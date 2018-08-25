@@ -1,0 +1,23 @@
+<keymap version="1" name="csucjh" parent="$default">
+  <action id="$LRU">
+    <keyboard-shortcut first-keystroke="shift f" />
+  </action>
+  <action id="Editor LRU">
+    <keyboard-shortcut first-keystroke="shift f" />
+  </action>
+  <action id="Git.Menu">
+    <keyboard-shortcut first-keystroke="shift g" />
+  </action>
+  <action id="Maven.Reimport">
+    <keyboard-shortcut first-keystroke="shift m" />
+  </action>
+  <action id="RevealIn">
+    <keyboard-shortcut first-keystroke="shift e" />
+  </action>
+  <action id="SplitHorizontally">
+    <keyboard-shortcut first-keystroke="shift h" />
+  </action>
+  <action id="SplitVertically">
+    <keyboard-shortcut first-keystroke="shift v" />
+  </action>
+</keymap>

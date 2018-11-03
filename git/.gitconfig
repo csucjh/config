@@ -12,11 +12,6 @@
 	excludesfile =
 	preloadindex = true
 	fscache = true
-[difftool "sourcetree"]
-	cmd = 'D:/developer/BCompare/BComp.exe' \"$LOCAL\" \"$REMOTE\"
-[mergetool "sourcetree"]
-	cmd = 'D:/developer/BCompare/BComp.exe' \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
-	trustExitCode = true
 [gc]
 	auto = 256
 [pull]

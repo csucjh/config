@@ -14,3 +14,31 @@ github_rsa与github_rsa.pub文件是一对，config文件中每新增一个host�
 生成公司钥命令：ssh-keygen -t rsa -C 'csucjh@163.com' -f id_rsa 注意会提示输入密码，如果选择输入密码则每次提交代码都会要求验证密码，所以一般不设置（毕竟没人闲的蛋疼冒充你去改你的代码）
 
 最后，把生成的公钥配置到代码库中，就可以使用git clone克隆代码库了
+
+
+#################################################################
+1、生成SSH key
+	ssh-keygen -t rsa -C "csucjh@163.com" -f ~/.ssh/id_rsa
+
+2、Adding your SSH key to the ssh-agent(linux才必须要)
+	ssh-add ~/.ssh/id_rsa
+
+	若执行ssh-add ....是出现错误:Could not open a connection to your authentication agent，则先执行如下命令即可：
+	ssh-agent bash
+	再执行add命令
+
+	Permissions 0664 for '.ssh/github_rsa' are too open.
+	It is required that your private key files are NOT accessible by others.
+	This private key will be ignored.
+	chmod  600 ~/.ssh/*
+
+
+3、测试SSH connection
+	ssh -vT git@github.com
+
+	查看md5码
+	ssh-keygen -E md5 -lf ~/.ssh/id_rsa
+
+4、配置多站点
+	touch ~/.ssh/config
+	参考config配置

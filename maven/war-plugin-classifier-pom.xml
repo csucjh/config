@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<!--
+		使用特定profile排除war打成jar后包中的残留配置
+		mvn clean package -P war-exclude
+		
+		这种方式打出的包被依赖时要使用classifier指定
+		<dependency>
+			<groupId>com.wlqq.pcoss</groupId>
+			<artifactId>pcoss-web</artifactId>
+			<version>0.0.1</version>
+			<classifier>classes</classifier>
+		</dependency>
+	-->
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                    <!--决定最终jar的后缀 xxx-classifier.jar-->
+                    <classesClassifier>classes</classesClassifier>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>war-exclude</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>application.properties</exclude>
+                            <exclude>config/*</exclude>
+                            <exclude>static/**/*</exclude>
+                            <exclude>templates/*</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+</project>

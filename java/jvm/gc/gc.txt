@@ -1,0 +1,31 @@
+#使用GMT+08时区格式
+JAVA_OPTS="$JAVA_OPTS -Duser.timezone=GMT+08 "
+
+#-Xms 堆最小
+#-Xmx 堆最大
+#-xmn 新生代大小，等价于-XX:NewSize与-XX:MaxNewSize同时设置
+#-xmn与-XX:NewSize同时设置，在后面的生效
+JAVA_OPTS="$JAVA_OPTS -Xms2048m -Xmx4096m -XX:NewSize=1g -XX:MaxNewSize=1g -xmn=1g "
+
+
+#-verbose:gc 开启垃圾收集时的信息打印
+#-XX:+DisableExplicitGC 禁止代码中调用System.gc()，就像没有这行一样
+#	(如果我们的应用中使用了java nio中的direct memory，那么使用-XX:+DisableExplicitGC一定要小心，存在潜在的内存泄露风险)
+#-XX:ParallelGCThread 配置ParNew的并行度为4
+#-XX:+UseConcMarkSweepGC 使用cms收集器
+#-XX:CMSInitiatingOccupancyFraction=75 配置当老年代使用内存达到75%时触发FullGC
+#-XX:+UseCMSInitiatingOccupancyOnly 让JVM不基于运行时收集的数据来启动CMS垃圾收集周期，而是每次都使用-XX:CMSInitiatingOccupancyFraction配置的占比来触发GC
+#	(然而，请记住大多数情况下，JVM比我们自己能作出更好的垃圾收集决策。因此，只有当我们充足的理由(比如测试)并且对应用程序产生的对象的生命周期有深刻的认知时，才应该使用该标志)
+JAVA_OPTS="$JAVA_OPTS -verbose:gc -XX:+DisableExplicitGC -XX:ParallelGCThreads=4 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -Xloggc:/tomcat8/logs/gc.log "
+
+#-XX:+PrintGCApplicationConcurrentTime 打印应用执行的时间 
+#-XX:+PrintGCApplicationStoppedTime 打印应用暂停的时间
+JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime "
+
+
+#发生内存溢出时生成堆dump文件
+JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tomcat8/logs/hs_err_pid%p.hprof "
+
+
+#当jvm发生未知Error是生成error文件
+JAVA_OPTS="$JAVA_OPTS  -XX:ErrorFile=/tomcat8/logs/hs_err_pid%p.log "

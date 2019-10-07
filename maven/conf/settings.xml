@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    
+	<!--本地存储路径-->
+    <localRepository>D:\maven\global</localRepository>
+
+    <!--下载插件时的组标识，一般就是groupId-->
+    <pluginGroups>
+        <pluginGroup>com.snda.toolkit.plugins</pluginGroup>
+        <pluginGroup>org.mortbay.jetty</pluginGroup>
+        <pluginGroup>org.springframework.boot</pluginGroup> 
+    </pluginGroups>
+
+
+    <!--deploy时连接nexus的账户信息-->
+    <servers>
+        <server>
+            <id>deployRelease</id>
+            <username></username>
+            <password></password>
+        </server>
+
+        <server>
+            <id>deploySnapshot</id>
+            <username></username>
+            <password></password>
+        </server>
+    </servers>
+
+	
+    <profiles>
+		<!--默认使用阿里云仓库(可以参照配置多个)-->
+		<profile>
+            <id>nexus-aliyun</id>
+            <repositories>
+                <repository>
+                    <id>aliyun</id>
+                    <url>https://maven.aliyun.com/repository/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>aliyun-plugin</id>
+                    <url>https://maven.aliyun.com/repository/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
+            <id>nexus-repo1</id>
+            <repositories>
+                <repository>
+                    <id>repo1</id>
+                    <url>http://repo1.maven.org/maven2/
+                    </url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+		
+        <!--预定义几个maven属性的默认值，可以在程序中被覆盖-->
+		<profile>
+            <id>jdk-1.8</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+            </properties>
+        </profile>
+
+		<!--预定义几个属性在项目的pom.xml的distributionManagement配置项中使用-->
+		<!--可以删除，留着备用-->
+        <profile>
+            <id>deploy-aliyun</id>
+            <properties>
+                <release.repository.id>deployRelease</release.repository.id>
+                <release.repository.name>Release Repository</release.repository.name>
+                <release.repository.url>http://maven.aliyun.com/content/repositories/releases/</release.repository.url>
+
+                <snapshot.repository.id>deploySnapshot</snapshot.repository.id>
+                <snapshot.repository.name>Snapshot Repository</snapshot.repository.name>
+                <snapshot.repository.url>http://maven.aliyun.com/content/repositories/snapshots/</snapshot.repository.url>
+            </properties>
+        </profile>
+
+    </profiles>
+
+    <!-- 默认激活配置 -->
+    <activeProfiles>
+        <activeProfile>jdk-1.8</activeProfile>
+        <activeProfile>nexus-aliyun</activeProfile>
+        <activeProfile>nexus-repo1</activeProfile>
+    </activeProfiles>
+</settings>

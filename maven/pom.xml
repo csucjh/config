@@ -412,4 +412,17 @@
 			<url>http://ip:port/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>${release.repository.id}</id>
+			<name>${release.repository.name}</name>
+			<url>${release.repository.url}</url>
+		</repository>
+		<snapshotRepository>
+			<id>${snapshot.repository.id}</id>
+			<name>${snapshot.repository.name}</name>
+			<url>${snapshot.repository.url}</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

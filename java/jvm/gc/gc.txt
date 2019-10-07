@@ -1,11 +1,19 @@
 #使用GMT+08时区格式
-JAVA_OPTS="$JAVA_OPTS -Duser.timezone=GMT+08 "
+CATALINA_OPTS="$CATALINA_OPTS -Duser.timezone=GMT+08 "
+
+
 
 #-Xms 堆最小
 #-Xmx 堆最大
-#-xmn 新生代大小，等价于-XX:NewSize与-XX:MaxNewSize同时设置
-#-xmn与-XX:NewSize同时设置，在后面的生效
-JAVA_OPTS="$JAVA_OPTS -Xms2048m -Xmx4096m -XX:NewSize=1g -XX:MaxNewSize=1g -xmn=1g "
+#-Xmn 新生代大小，等价于-XX:NewSize与-XX:MaxNewSize同时设置
+#-Xmn与-XX:NewSize同时设置，在后面的生效
+CATALINA_OPTS="$CATALINA_OPTS -Xms2048m -Xmx4096m -XX:NewSize=1g -XX:MaxNewSize=1g -Xmn1g "
+
+
+
+#设置的是年龄阈值，默认15（对象被复制的次数，新生代的对象复制超过这个次数还存活则会移动到老年代）
+CATALINA_OPTS="$CATALINA_OPTS -XX:MaxTenuringThreshold=5 "
+
 
 
 #-verbose:gc 开启垃圾收集时的信息打印
@@ -16,16 +24,41 @@ JAVA_OPTS="$JAVA_OPTS -Xms2048m -Xmx4096m -XX:NewSize=1g -XX:MaxNewSize=1g -xmn=
 #-XX:CMSInitiatingOccupancyFraction=75 配置当老年代使用内存达到75%时触发FullGC
 #-XX:+UseCMSInitiatingOccupancyOnly 让JVM不基于运行时收集的数据来启动CMS垃圾收集周期，而是每次都使用-XX:CMSInitiatingOccupancyFraction配置的占比来触发GC
 #	(然而，请记住大多数情况下，JVM比我们自己能作出更好的垃圾收集决策。因此，只有当我们充足的理由(比如测试)并且对应用程序产生的对象的生命周期有深刻的认知时，才应该使用该标志)
-JAVA_OPTS="$JAVA_OPTS -verbose:gc -XX:+DisableExplicitGC -XX:ParallelGCThreads=4 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -Xloggc:/tomcat8/logs/gc.log "
+CATALINA_OPTS="$CATALINA_OPTS -verbose:gc -XX:+DisableExplicitGC -XX:ParallelGCThreads=4 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -Xloggc:/tomcat8/logs/gc.log "
+
+
+
+#默认场景下参数为：-XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0。这意味着每次full gc（标记清除）后，都会压缩。
+#也就是默认情况下就是100%都是标记-清除-压缩。如果你的CMSFullGCsBeforeCompaction设置为5，那么每6次full gc，其中才有1次是标记-清除-压缩。
+CATALINA_OPTS="$CATALINA_OPTS -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=10"
+
+
 
 #-XX:+PrintGCApplicationConcurrentTime 打印应用执行的时间 
 #-XX:+PrintGCApplicationStoppedTime 打印应用暂停的时间
-JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime "
+CATALINA_OPTS="$CATALINA_OPTS -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime "
+
 
 
 #发生内存溢出时生成堆dump文件
-JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tomcat8/logs/hs_err_pid%p.hprof "
+CATALINA_OPTS="$CATALINA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tomcat8/logs/hs_err_pid%p.hprof "
+
 
 
 #当jvm发生未知Error是生成error文件
-JAVA_OPTS="$JAVA_OPTS  -XX:ErrorFile=/tomcat8/logs/hs_err_pid%p.log "
+CATALINA_OPTS="$CATALINA_OPTS -XX:ErrorFile=/tomcat8/logs/hs_err_pid%p.log "
+
+
+
+
+#汇总
+CATALINA_OPTS="$CATALINA_OPTS -Duser.timezone=GMT+08"
+CATALINA_OPTS="$CATALINA_OPTS -XX:MaxTenuringThreshold=5"
+CATALINA_OPTS="$CATALINA_OPTS -verbose:gc -XX:+DisableExplicitGC -XX:ParallelGCThreads=4 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -Xloggc:/tomcat8/logs/gc.log"
+CATALINA_OPTS="$CATALINA_OPTS -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=10"
+CATALINA_OPTS="$CATALINA_OPTS -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime"
+CATALINA_OPTS="$CATALINA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tomcat8/logs/hs_err_pid%p.hprof"
+CATALINA_OPTS="$CATALINA_OPTS -XX:ErrorFile=/tomcat8/logs/hs_err_pid%p.log "
+
+#样例
+-Duser.timezone=GMT+08 -Xms2048m -Xmx4096m -Xmn1g -verbose:gc -XX:+DisableExplicitGC -XX:ParallelGCThreads=4 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=10 -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tomcat8/logs/hs_err_pid%p.hprof -XX:ErrorFile=/tomcat8/logs/hs_err_pid%p.log

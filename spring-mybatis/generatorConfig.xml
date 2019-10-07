@@ -3,6 +3,20 @@
 <generatorConfiguration>
 	<!--一般不在这里指定数据库驱动，最好在pom.xml中mybatis-generator-maven-plugin插件下依赖驱动 -->
 	<!-- 集合maven插件时，需要配置mvn mybatis-generator:generate指令 -->
+	<!-- <classPathEntry location="E:\mavenrepository\mysql\mysql-connector-java\5.1.36\mysql-connector-java-5.1.36.jar" /> -->
+
+	<!--
+    context:生成一组对象的环境
+    id:必选，上下文id，用于在生成错误时提示
+    defaultModelType:指定生成对象的样式
+        1，conditional：类似hierarchical；
+        2，flat：所有内容（主键，blob）等全部生成在一个对象中；
+        3，hierarchical：主键生成一个XXKey对象(key class)，Blob等单独生成一个对象，其他简单属性在一个对象中(record class)
+    targetRuntime:
+        1，MyBatis3：默认的值，生成基于MyBatis3.x以上版本的内容，包括XXXBySample；
+        2，MyBatis3Simple：类似MyBatis3，只是不生成XXXBySample；
+    introspectedColumnImpl：类全限定名，用于扩展MBG
+    -->
 	<context id="context1" targetRuntime="MyBatis3">
 		<!-- 生成的Java文件的编码 -->
 		<property name="javaFileEncoding" value="UTF-8" />
@@ -24,6 +38,12 @@
 			<property name="suppressDate" value="true" />
 			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
 			<property name="suppressAllComments" value="true" />
+			<!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
+            一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖
+         	-->
+			<property name="autoDelimitKeywords" value="false"/>
+			<!-- 生成的Java文件的编码 -->
+			<property name="javaFileEncoding" value="UTF-8"/>
 		</commentGenerator>
 		
 		<!--这几个属性名在pom.xml中配置-->
@@ -31,12 +51,19 @@
 						connectionURL="${mybatis.generator.jdbcURL}"
 						userId="${mybatis.generator.jdbcUserId}"
 						password="${mybatis.generator.jdbcPassword}"/>
-
+		
+		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="true" />
+		</javaTypeResolver>
+		
 		<!-- 生成模型的包名和位置 -->
 		<javaModelGenerator targetPackage="com.csucjh.dal.model" targetProject="src\main\java">
 			<!-- for MyBatis3/MyBatis3Simple 自动为每一个生成的类创建一个构造方法，构造方法包含了所有的field；而不是使用setter； -->
 			<property name="constructorBased" value="false" />
 			<property name="enableSubPackages" value="true" />
+			<!-- 从数据库返回的值被清理前后的空格 -->
+			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 

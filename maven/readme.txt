@@ -1,13 +1,13 @@
 archetype-catalog.xml  
-	使用maven骨架构建项目
+	浣跨敤maven楠ㄦ灦鏋勫缓椤圭洰
 	
 assembly-plugin-pom.xml
-	maven-assembly-plugin打包的maven配置
+	maven-assembly-plugin鎵撳寘鐨刴aven閰嶇疆
 jar-assembly.xml  
-	使用maven-assembly-plugin打包时自定义的assembly descriptor
+	浣跨敤maven-assembly-plugin鎵撳寘鏃惰嚜瀹氫箟鐨刟ssembly descriptor
 	
 jar-plugin-pom.xml  
-	maven-jar-plugin打包的maven配置
+	maven-jar-plugin鎵撳寘鐨刴aven閰嶇疆
 	
 pom.xml  
-	常规配置
+	甯歌閰嶇疆

@@ -8,10 +8,9 @@ github_rsa是ssh协议的私钥文件（手动生成）
 
 github_rsa.pub是ssh协议的公钥文件（手动生成）
 
-
 github_rsa与github_rsa.pub文件是一对，config文件中每新增一个host的配置，一般需要生成一对公司钥来支持ssh协议，当然所有仓库统一使用一对公私钥也是可以的，就看自己的喜好
 
-生成公司钥命令：ssh-keygen -t rsa -C 'csucjh@163.com' -f id_rsa 注意会提示输入密码，如果选择输入密码则每次提交代码都会要求验证密码，所以一般不设置（毕竟没人闲的蛋疼冒充你去改你的代码）
+生成公私钥命令：ssh-keygen -t rsa -C 'csucjh@163.com' -f ~/.ssh/github_rsa 注意会提示输入密码，如果选择输入密码则每次提交代码都会要求验证密码，所以一般不设置（毕竟没人闲的蛋疼冒充你去改你的代码）
 
 最后，把生成的公钥配置到代码库中，就可以使用git clone克隆代码库了
 
@@ -39,6 +38,6 @@ github_rsa与github_rsa.pub文件是一对，config文件中每新增一个host�
 	查看md5码
 	ssh-keygen -E md5 -lf ~/.ssh/id_rsa
 
-4、配置多站点
+4、生成config文件
 	touch ~/.ssh/config
 	参考config配置

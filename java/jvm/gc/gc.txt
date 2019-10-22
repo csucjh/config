@@ -20,7 +20,8 @@ CATALINA_OPTS="$CATALINA_OPTS -XX:MaxTenuringThreshold=5 "
 #-XX:+DisableExplicitGC 禁止代码中调用System.gc()，就像没有这行一样
 #	(如果我们的应用中使用了java nio中的direct memory，那么使用-XX:+DisableExplicitGC一定要小心，存在潜在的内存泄露风险)
 #-XX:ParallelGCThread 配置ParNew的并行度为4
-#-XX:+UseConcMarkSweepGC 使用cms收集器
+#-XX:+UseConcMarkSweepGC[=num] 使用cms收集器
+#   (后边接等号指定并发线程数CMS默认启动的回收线程数是（CPU数量+3）/ 4，也就是当CPU在4个以上时，并发回收时垃圾收集线程不少于25%的CPU资源，并且随着CPU数量的增加而下降。但是当CPU不足4个（譬如2个）时，CMS对用户程序的影响就可能变得很大)
 #-XX:CMSInitiatingOccupancyFraction=75 配置当老年代使用内存达到75%时触发FullGC
 #-XX:+UseCMSInitiatingOccupancyOnly 让JVM不基于运行时收集的数据来启动CMS垃圾收集周期，而是每次都使用-XX:CMSInitiatingOccupancyFraction配置的占比来触发GC
 #	(然而，请记住大多数情况下，JVM比我们自己能作出更好的垃圾收集决策。因此，只有当我们充足的理由(比如测试)并且对应用程序产生的对象的生命周期有深刻的认知时，才应该使用该标志)
@@ -29,7 +30,7 @@ CATALINA_OPTS="$CATALINA_OPTS -verbose:gc -XX:+DisableExplicitGC -XX:ParallelGCT
 
 
 #默认场景下参数为：-XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0。这意味着每次full gc（标记清除）后，都会压缩。
-#也就是默认情况下就是100%都是标记-清除-压缩。如果你的CMSFullGCsBeforeCompaction设置为5，那么每6次full gc，其中才有1次是标记-清除-压缩。
+#也就是默认情况下就是100%都是标记-清除-压缩。如果你的CMSFullGCsBeforeCompaction设置为10，那么每11次full gc，其中才有1次是标记-清除-压缩。
 CATALINA_OPTS="$CATALINA_OPTS -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=10"
 
 

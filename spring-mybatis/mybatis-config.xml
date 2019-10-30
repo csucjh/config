@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!--
+	XMLConfigBuilder.parse方法解析该文件生成一个org.apache.ibatis.session.Configuration对象
+	SqlSessionFactoryBuilder.build方法通过解析的配置构建一个DefaultSqlSessionFactory
+-->
+<configuration>
+
+    <!--XMLConfigBuilder内部的settingsElement方法处理settings节点的配置-->
+    <settings>
+
+        <!--
+            本地缓存,SESSION表示执行的sql结果缓存数据可以在同一个sqlSession共享，
+            而STATEMENT，则同只有在单条语句会被缓存，两条语句不能共享缓存数据
+        -->
+        <setting name="localCacheScope" value="STATEMENT"/>
+
+        <!--
+            二级缓存的开关，默认为true，但需要在具体的mapper.xml文件中增加<cache/>配置才能使用二级缓存
+            默认情况下使用BaseExecutor，如果开启二级缓存则会被包一层装饰器，这个装饰器是CachingExecutor
+            CachingExecutor针对的是二级缓存，BaseExecutor针对的是一级缓存。
+        -->
+        <setting name="cacheEnabled" value="false"/>
+
+        <!-- 
+            可以改变默认BaseExecutor的执行器类型，默认就是SIMPLE，可选REUSE、BATCH、SIMPLE
+            该选型的值对应ExecutorType枚举类型
+        -->
+        <setting name="defaultExecutorType" value="SIMPLE" />
+    </settings>
+
+
+    <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+            <!-- 该参数默认为false -->
+            <!-- 设置为true时，会将RowBounds第一个参数offset当成pageNum页码使用 -->
+            <!-- 和startPage中的pageNum效果一样 -->
+            <property name="offsetAsPageNum" value="true"/>
+            <!-- 3.3.0版本可用 - 分页参数合理化，默认false禁用 -->
+            <!-- 启用合理化时，如果pageNum<1会查询第一页，如果pageNum>pages会查询最后一页 -->
+            <!-- 禁用合理化时，如果pageNum<1或pageNum>pages会返回空数据 -->
+            <property name="reasonable" value="true"/>
+            <!-- 支持通过Mapper接口参数来传递分页参数 -->
+            <property name="supportMethodsArguments" value="false"/>
+            <!-- always总是返回PageInfo类型,check检查返回类型是否为PageInfo,none返回Page -->
+            <property name="returnPageInfo" value="none"/>
+        </plugin>
+    </plugins>
+</configuration>

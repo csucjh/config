@@ -8,21 +8,38 @@
                 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd"
 >
 	<!-- 使用mybatis方式持久化数据 -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<!-- 当mybatis的xml文件和mapper接口不在相同包下时，需要用mapperLocations属性指定xml文件的路径。 *是个通配符，代表所有的文件 -->
-		<property name="mapperLocations" value="classpath:czgps/app/mybatis/*.xml" />
-	</bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:META-INF/spring/mybatis-config.xml"/>
+        <!-- 当mybatis的xml文件和mapper接口不在相同包下时，需要用mapperLocations属性指定xml文件的路径。 *是个通配符，代表所有的文件 -->
+        <property name="mapperLocations" value="classpath:mapping/*.xml"/>
+    </bean>
 
-	<!-- mybatis批量扫描，扫描出mapper接口自动创建代理对象并在Spring容器中注册 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<!-- 扫描出的mapper对应的bean的id是类型名(首字母必须小写) -->
-		<property name="basePackage" value="com.csucjh.dal.mapper" />
-		<!-- Spring整合Mybatis是会出现加载jdbc参数异常(因为配置文件加载问题) -->
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-	</bean>
-	<!-- Mybatis配置结束 -->
+     <!--
+        如果需要执行sql执行器类型，需要通过SqlSessionTemplate的重载构造函数来指定
+        或者可以在mybatis-config.xml中指定defaultExecutorType的值来配置默认的执行器类型
+    -->
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+        <constructor-arg index="1" value="BATCH"/>
+    </bean>
+
+    <!-- mybatis批量扫描，扫描出mapper接口自动创建代理对象并在Spring容器中注册 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描出的mapper对应的bean的id是类型名(首字母必须小写) -->
+        <property name="basePackage" value="com.wlqq.legalservice.dal.mapper"/>
+        <!--
+            Spring整合Mybatis是会出现加载jdbc参数异常(因为配置文件加载问题)
+            通过指定sqlSessionFactoryBeanName属性会调用SqlSessionTemplate的构造函数，默认使用SIMPLE类型执行器
+        -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+
+        <!--
+            通过sqlSessionTemplateBeanName属性指定SqlSessionTemplate,可以自定义执行器类型
+        -->
+        <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
+    </bean>
+    <!-- Mybatis配置结束 -->
 
 	<!-- 事务配置开始 -->
 	<!-- 数据源 -->

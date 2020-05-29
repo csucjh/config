@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<profiles>
+		<!--默认排除所有资源文件(用于镜像打包部署)-->
+        <profile>
+            <id>default</id>
+            <properties>
+                <resources.exclude>**/*</resources.exclude>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+		<!--本地开发使用，不排除-->
+        <profile>
+            <id>local</id>
+            <properties>
+                <resources.exclude></resources.exclude>
+            </properties>
+        </profile>
+    </profiles>
+	
+    <build>
+         <resources>
+			<!--src/main/resources目录下的排除策略-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>${resources.exclude}</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+</project>

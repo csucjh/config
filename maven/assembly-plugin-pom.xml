@@ -39,6 +39,7 @@
                 </executions>
             </plugin>
 
+			<!--没有addClasspath就要在Class-Path加上当前目录"."-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -58,6 +59,23 @@
                         <exclude>*.properties</exclude>
                         <exclude>*.xml</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+			
+			<!--有了addClasspath就不用在Class-Path加上当前目录"."-->
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>jar.test.Main</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>../conf/</Class-Path>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

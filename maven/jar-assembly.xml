@@ -17,15 +17,22 @@
     <!--处理资源文件-->
     <fileSets>
         <fileSet>
-            <directory>target/classes</directory>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>${project.build.finalName}.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/conf</directory>
             <outputDirectory>conf</outputDirectory>
             <includes>
-                <include>**/*.conf</include>
-                <include>**/*.properties</include>
-                <include>**/*.xml</include>
-                <include>**/*.p12</include>
-                <include>**/*.json</include>
-                <include>**/*.jks</include>
+                <include>log4j2-online.xml</include>
+                <include>log4j2-test.xml</include>
             </includes>
         </fileSet>
     </fileSets>
@@ -35,11 +42,11 @@
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
             <scope>runtime</scope>
-            <!--依赖包的文件名，看lib下的文件名-->
+            <!--依赖包的文件名，看lib下的文件名(一般不需要)-->
             <outputFileNameMapping>
                 ${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
             </outputFileNameMapping>
-            <!--排除依赖groupId:artifact-->
+            <!--排除依赖groupId:artifact(一般不需要)-->
             <excludes>
                 <exclude>org.springframework:spring-webmvc</exclude>
                 <exclude>org.springframework:spring-web</exclude>

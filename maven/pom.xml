@@ -361,7 +361,7 @@
 			<plugin>
 				<groupId>org.mybatis.generator</groupId>
 				<artifactId>mybatis-generator-maven-plugin</artifactId>
-				<version>1.3.2</version>
+				<version>1.3.7</version>
 				<dependencies>
 					<dependency>
 						<groupId>mysql</groupId>
@@ -372,7 +372,7 @@
 				<configuration>
 					<!--配置文件的路径，默认就是这个值，可以省略 -->
 					<configurationFile>${basedir}/src/main/resources/generatorConfig.xml</configurationFile>
-					<!--重复生成时覆盖 -->
+					<!--重复生成时覆盖，只对java类有作用，要覆盖xml要使用配置中的插件类 -->
 					<overwrite>true</overwrite>
 				</configuration>
 			</plugin>

@@ -25,6 +25,17 @@
 		<!-- 格式化XML代码 -->
 		<property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
 
+		<!-- 
+		    是否覆盖xml，默认插件的overwrite只对java类有用，xml覆盖需要用该插件类
+			mybatis-generator-maven-plugin插件版本号不小于1.3.7
+		-->
+		<!--
+			<plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"></plugin>
+			<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
+			<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+			<plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
+		-->
+		
 		<!-- 是否重写方法 -->
 		<!--
 			<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>

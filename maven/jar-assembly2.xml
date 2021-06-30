@@ -1,0 +1,64 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <!--maven-assembly-plugin中descriptorRef引用-->
+	<id>jar-assembly</id>
+    
+	<!--支持的打包格式有zip、tar、tar.gz (or tgz)、tar.bz2 (or tbz2)、jar、dir、war，可以同时指定多个打包格式-->
+    <formats>
+        <format>tar.gz</format>
+        <format>dir</format>
+        <format>zip</format>
+    </formats>
+
+    <!--指定是否包含打包层目录，false直接放在包的根目录下，true会多一层打包层目录-->
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <!--处理资源文件-->
+    <fileSets>
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>${project.build.finalName}.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+        </fileSet>
+		<!--保留conf目录指定文件-->
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>log4j2-online.xml</include>
+                <include>log4j2-test.xml</include>
+            </includes>
+        </fileSet>
+		<!--可以生成一个空的conf目录-->
+		<fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+
+    <!--处理依赖项-->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <scope>runtime</scope>
+            <!--依赖包的文件名，看lib下的文件名(一般不需要)-->
+            <outputFileNameMapping>
+                ${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+            </outputFileNameMapping>
+            <!--排除依赖groupId:artifact(一般不需要)-->
+            <excludes>
+                <exclude>org.springframework:spring-webmvc</exclude>
+                <exclude>org.springframework:spring-web</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+</assembly>

@@ -1,0 +1,6 @@
+server.name: kibana
+server.host: "0.0.0.0"
+# 这里暂时不需要，因为docker-compose.yml中有指定
+#elasticsearch.hosts: [ "http://127.0.0.1:9200" ]
+elasticsearch.username: kibana_system
+elasticsearch.password: CawnYhDSfQfZiAqeKSOc

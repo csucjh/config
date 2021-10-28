@@ -96,12 +96,31 @@ services:
     container_name: es-head
     ports:
       - 9100:9100
-    environment:
-      ELASTICSEARCH_URL: http://es01:9200
-      ELASTICSEARCH_HOSTS: http://es01:9200
     networks:
       - elastic 
 
+
+  dejavu:
+    image: appbaseio/dejavu
+    container_name: dejavu
+    ports:
+      - 1358:1358
+    links:
+      - es01
+    networks:
+      - elastic
+
+
+  cerebro:
+    image: lmenezes/cerebro
+    container_name: cerebro
+    ports:
+        - 9000:9000
+    command:
+        - -Dhosts.0.host=http://es01:9200
+    networks:
+      - elastic
+        
 
 # 将data和logs使用本地挂载，在本地速度比较快，不然映射到宿主机目录卡的你怀疑人生
 volumes:

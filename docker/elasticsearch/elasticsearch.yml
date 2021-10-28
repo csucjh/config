@@ -9,7 +9,8 @@ path.repo: ["/usr/share/elasticsearch/backup"]
 http.cors.enabled: true
 http.cors.allow-origin: "*"
 #开启认证头，es-head访问时可以使用账号密码
-http.cors.allow-headers: Authorization,X-Requested-With,Content-Length,Content-Type
+http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+http.cors.allow-credentials: true
 
 #安全认证
 xpack.security.enabled: true

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - default
+    volumes:
+      - ./conf/redis.conf:/etc/redis/redis.conf
+      - data01:/data
+      - logs01:/logs
+    command:
+      /bin/bash -c "redis-server /etc/redis/redis.conf"
+      
+volumes:
+  data01:
+    driver: local
+  logs01:
+    driver: local
+    
+networks:
+  default:
+    driver: bridge

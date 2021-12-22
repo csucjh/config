@@ -1,0 +1,68 @@
+"" Source your .vimrc
+"source ~/.vimrc
+
+
+""" Map leader to space ---------------------
+let mapleader=" "
+
+""" Plugins  --------------------------------
+set surround
+set multiple-cursors
+set commentary
+set argtextobj
+set easymotion
+set textobj-entire
+set ReplaceWithRegister
+
+""" Plugin settings -------------------------
+let g:argtextobj_pairs="[:],(:),<:>"
+
+""" Common settings -------------------------
+set showmode
+set so=5
+set incsearch
+set nu
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+
+
+""" Idea specific settings ------------------
+set ideajoin
+" set ideastatusicon=gray
+set idearefactormode=keep
+
+""" Mappings --------------------------------
+map <leader>f <Plug>(easymotion-s)
+map <leader>e <Plug>(easymotion-f)
+
+map <leader>d <Action>(Debug)
+map <leader>r <Action>(RenameElement)
+map <leader>c <Action>(Stop)
+map <leader>z <Action>(ToggleDistractionFreeMode)
+
+map <leader>s <Action>(SelectInProjectView)
+map <leader>a <Action>(Annotate)
+map <leader>h <Action>(Vcs.ShowTabbedFileHistory)
+map <S-Space> <Action>(GotoNextError)
+
+map <leader>b <Action>(ToggleLineBreakpoint)
+map <leader>o <Action>(FileStructurePopup)
+
+" Reformat the current line only
+map <leader>l V<Action>(ReformatCode)
+
+
+""" Strict mode for development ---------------
+set ideastrictmode
+
+
+
+""" 停掉一些键---------------
+inoremap <up> <nop>
+nnoremap <up> <nop>
+inoremap <down> <nop>
+nnoremap <down> <nop>
+inoremap <left> <nop>
+nnoremap <left> <nop>
+inoremap <right> <nop>
+nnoremap <right> <nop>

@@ -3,6 +3,7 @@
 	preloadindex = true
 	fscache = true
 	autocrlf = windows:true/linux:input
+	quotepath = false
 [user]
 	name = csucjh
 	email = csucjh@163.com

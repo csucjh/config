@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <build>
+        <plugins>
+            <!-- maven-shade-plugin打包一个包含所有必需依赖的fat jar, 依赖冲突时可用 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+				    <!--
+                        是否需要移除 已经被打入jar的依赖，例如：项目 依赖fastjson，而fastjson已经被打入打包后的jar文件中了，createDependencyReducedPom为true，fastjson将从导出后的pom中移除
+                    -->
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <!--mvn help:describe -Dplugin=shade 查看assembly插件的goals-->
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 自动将所有不使用的类排除，通过分析依赖关系来排除，所以反射用到的类会找不到-->
+                            <minimizeJar>true</minimizeJar>
+
+                            <!--默认情况下，shade生成的包会插覆盖原始jar包，原始jar会被重命名为original开头的包，如果需要同时保留原始的jar包和shade后的jar包，可以配置如下-->
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+
+                            <!--shade会作为shade包的后缀-->
+                            <shadedClassifierName>shade</shadedClassifierName>
+
+                            <!--是否提供source文件 source是比较重要的，方便联调、debug 这里设置为true，这里要注意，所有打入jar的依赖jar 都要有source哦，不然会打包失败-->
+                            <createSourcesJar>true</createSourcesJar>
+
+                            <!--是否同步将source中的包进行重命名，这点比较重要，如果设置false，source中我们重命名的package会报错，虽然不影响功能-->
+                            <shadeSourcesContent>true</shadeSourcesContent>
+
+                            <!--
+                                将部分jar包添加或排除
+                                jar包以groupId:artifactId[[:type]:classifier]的形式表示
+                                1.3版本后插件支持通配符 ‘*’ and ‘?’
+                            -->
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.projectlombok:lombok</exclude>
+                                    <exclude>org.slf4j:*</exclude>
+                                </excludes>
+                            </artifactSet>
+
+                            <filters>
+                                <!-- 将依赖jar包内部资源添加或排除 -->
+                                <filter>
+                                    <artifact>junit:junit</artifact>
+                                    <includes>
+                                        <include>junit/framework/**</include>
+                                        <include>org/junit/**</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>org/junit/experimental/**</exclude>
+                                        <exclude>org/junit/runners/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <!--
+                                     问题1：Invalid signature file digest for Manifest main attributes
+                                     原因：有些jar包生成时，会 使用jarsigner生成文件签名（完成性校验），分为两个文件存放在META-INF目录下
+                                     这里排除掉META-INF文件夹下的签名文件，不然在使用jar的时候可能会产生SecurityExceptions
+                                 -->
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
+                            <!--
+                                重命名包，当前打包都会以这个重命名的包名来隔离，所以才会解决依赖问题
+                                将pattern中包名重命名为shadedPattern中包名
+                            -->
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.apache.commons.lang3</pattern>
+                                    <shadedPattern>shade.org.apache.commons.lang3</shadedPattern>
+                                    <excludes>
+                                        <!--排除原始jar中的指定类，注意这些类只是不会重命名，并不是把类从jar中去掉-->
+                                        <exclude>org.apache.commons.lang3.CharUtils</exclude>
+                                        <exclude>org.apache.commons.lang3.ClassUtils</exclude>
+                                    </excludes>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons.collections</pattern>
+                                    <shadedPattern>shade.org.apache.commons.collections</shadedPattern>
+                                    <includes>
+                                        <!--指定只有原始jar中的指定类会重命名，原始jar中剩下的类不会重命名-->
+                                        <include>org.apache.commons.collections.CollectionUtils</include>
+                                        <include>org.apache.commons.collections.ListUtils</include>
+                                    </includes>
+                                </relocation>
+                            </relocations>
+
+                            <!--
+                                资源转换:在打包时，存在将多个构件中的class文件或资源文件聚合的需求。shade插件提供了丰富的Transformer工具类
+                                更多的Transformer见:http://maven.apache.org/plugins/maven-shade-plugin/examples/resource-transformers.html
+                            -->
+                            <transformers>
+                                <!--往MANIFEST文件中写入Main-Class是可执行包的必要条件, ManifestResourceTransformer可以实现-->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>jar.test.ShadePluginTest</mainClass>
+                                </transformer>
+
+                                <!--用来处理多个jar包中存在重名的配置文件的合并，尤其是spring, 使用AppendingTransformer实现-->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+
+                                <!--JDK的服务发现机制是基于META-INF/services/目录的，如果同一接口存在多个实现需要合并 ，则可以使用ServicesResourceTransformer-->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -4,6 +4,9 @@
     <build>
         <plugins>
             <!--
+			maven-assembly-plugin打包一个指定目录结构的jar
+            该插件不能再具有软链接的目录中执行，会报错(windows遇到了，linux未尝试)
+			
             linux下用冒号，win下用分号
             java -cp ./lib/*;./conf  jar.test.Main
             java -jar .\lib\jartest-0.0.1-SNAPSHOT.jar
@@ -25,14 +28,19 @@
                         <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
+							<!--mvn help:describe -Dplugin=assembly 查看assembly插件的goals-->
                             <goal>single</goal>
                         </goals>
                         <configuration>
                             <!--包名不追加descriptorRef引用的assemblyId-->
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptorRefs>
-                                <!--jar-assembly在上述自定义assembly descriptor中-->
-                                <descriptorRef>jar-assembly</descriptorRef>
+                                <!--
+                                    package是上述自定义assembly descriptor依赖中的xml文件的名字，而不是xml里面的id
+                                    文件名错误会报错：Error reading assemblies: Descriptor with ID 'package' not found
+                                    说明assemblies目录也是固定的名称
+                                -->
+                                <descriptorRef>package</descriptorRef>
                             </descriptorRefs>
                         </configuration>
                     </execution>

@@ -3,7 +3,11 @@ archetype-catalog.xml
 	
 assembly-plugin-pom.xml
 	maven-assembly-plugin打包的maven配置
-jar-assembly.xml  
+
+shade-plugin-pom.xml
+	maven-shade-plugin打包的maven配置
+
+package.xml  
 	使用maven-assembly-plugin打包时自定义的assembly descriptor
 	
 jar-plugin-pom.xml  

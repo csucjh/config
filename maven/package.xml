@@ -1,8 +1,8 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <!--maven-assembly-plugin中descriptorRef引用-->
-	<id>jar-assembly</id>
+    <!--maven-assembly-plugin中descriptorRef引用的是文件名package，不是这id-->
+	<id>assembly</id>
     
 	<!--支持的打包格式有zip、tar、tar.gz (or tgz)、tar.bz2 (or tbz2)、jar、dir、war，可以同时指定多个打包格式-->
     <formats>
@@ -27,6 +27,7 @@
             <directory>${project.basedir}/src/main/resources/bin</directory>
             <outputDirectory>bin</outputDirectory>
         </fileSet>
+		<!--保留conf目录指定文件-->
         <fileSet>
             <directory>${project.basedir}/src/main/resources/conf</directory>
             <outputDirectory>conf</outputDirectory>
@@ -34,6 +35,13 @@
                 <include>log4j2-online.xml</include>
                 <include>log4j2-test.xml</include>
             </includes>
+        </fileSet>
+		<!--可以生成一个空的conf目录-->
+		<fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 

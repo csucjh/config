@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<yandex>
+    <!--
+		可以从zk中节点获取数据from_zk="/clickhouse-shard"
+		<clickhouse_remote_servers from_zk="/clickhouse-shard" />
+	-->
+	<clickhouse_remote_servers>
+		<default>
+		<shard>
+			<internal_replication>true</internal_replication>
+			<replica>
+				<host>ck01-01</host>
+				<port>9000</port>
+				<user>admin</user>
+				<password>admin</password>
+			</replica>
+			<replica>
+				<host>ck01-02</host>
+				<port>9000</port>
+				<user>admin</user>
+				<password>admin</password>
+			</replica>
+		</shard>
+		<shard>
+			<internal_replication>true</internal_replication>
+			<replica>
+				<host>ck02-01</host>
+				<port>9000</port>
+				<user>admin</user>
+				<password>admin</password>
+			</replica>
+			<replica>
+				<host>ck02-02</host>
+				<port>9000</port>
+				<user>admin</user>
+				<password>admin</password>
+			</replica>
+		</shard>
+		</default>
+	</clickhouse_remote_servers>
+	
+	<zookeeper-servers>
+		<node index="0">
+		<host>zk1</host>
+		<port>2181</port>
+		</node>
+	<!--
+		<node index="1">
+		<host>zk2</host>
+		<port>2181</port>
+		</node>
+		<node index="2">
+		<host>zk3/host>
+		<port>2181</port>
+		</node>
+	-->
+	</zookeeper-servers>
+	
+	<macros>
+		<layer>01</layer>
+		<shard>01</shard>
+		<replica>default_01_02</replica>
+	</macros>
+</yandex>

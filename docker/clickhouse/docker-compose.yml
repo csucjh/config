@@ -1,0 +1,90 @@
+version: "3.3"
+services:
+  ck01-01:
+    image: clickhouse/clickhouse-server:22.9.7.34
+    container_name: ck01-01
+    restart: always
+    ulimits:
+      nofile:
+        soft: 300001
+        hard: 300002
+    ports:
+      - 9001:9000
+      - 8133:8123
+    volumes:
+      - ./logs/ck01-01/:/var/log/clickhouse-server/
+      - ./data/ck01-01/:/var/lib/clickhouse/
+      - ./conf/config.xml:/etc/clickhouse-server/config.xml
+      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+      - ./conf/metrika-ck01-01.xml:/etc/clickhouse-server/metrika.xml
+    depends_on:
+      - zk1
+  ck01-02:
+    image: clickhouse/clickhouse-server:22.9.7.34
+    container_name: ck01-02
+    restart: always
+    ulimits:
+      nofile:
+        soft: 300001
+        hard: 300002
+    ports:
+      - 9002:9000
+      - 8134:8123
+    volumes:
+      - ./logs/ck01-02/:/var/log/clickhouse-server/
+      - ./data/ck01-02/:/var/lib/clickhouse/
+      - ./conf/config.xml:/etc/clickhouse-server/config.xml
+      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+      - ./conf/metrika-ck01-02.xml:/etc/clickhouse-server/metrika.xml
+    depends_on:
+      - zk1
+      
+      
+  ck02-01:
+    image: clickhouse/clickhouse-server:22.9.7.34
+    container_name: ck02-01
+    restart: always
+    ulimits:
+      nofile:
+        soft: 300001
+        hard: 300002
+    ports:
+      - 9003:9000
+      - 8135:8123
+    volumes:
+      - ./logs/ck02-01/:/var/log/clickhouse-server/
+      - ./data/ck02-01/:/var/lib/clickhouse/
+      - ./conf/config.xml:/etc/clickhouse-server/config.xml
+      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+      - ./conf/metrika-ck02-01.xml:/etc/clickhouse-server/metrika.xml
+    depends_on:
+      - zk1
+  ck02-02:
+    image: clickhouse/clickhouse-server:22.9.7.34
+    container_name: ck02-02
+    restart: always
+    ulimits:
+      nofile:
+        soft: 300001
+        hard: 300002
+    ports:
+      - 9004:9000
+      - 8136:8123
+    volumes:
+      - ./logs/ck02-02/:/var/log/clickhouse-server/
+      - ./data/ck02-02/:/var/lib/clickhouse/
+      - ./conf/config.xml:/etc/clickhouse-server/config.xml
+      - ./conf/users.xml:/etc/clickhouse-server/users.xml
+      - ./conf/metrika-ck02-02.xml:/etc/clickhouse-server/metrika.xml
+    depends_on:
+      - zk1
+      
+  zk1:
+    image: zookeeper
+    container_name: zk1
+    restart: always
+    hostname: zk1
+    expose:
+      - "2181"
+    ports:
+      - 2181:2181

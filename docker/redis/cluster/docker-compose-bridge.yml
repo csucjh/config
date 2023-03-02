@@ -119,3 +119,4 @@ services:
 networks:
   redis:
     driver: bridge
+    name: redis_cluster

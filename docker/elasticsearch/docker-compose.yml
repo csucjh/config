@@ -144,4 +144,4 @@ networks:
     #指定网络模式为桥接
     driver: bridge
     #指定网络名称，默认是目录名加上网络名称也就是elasticsearch_elastic
-    name: elasticsearch_elastic
+    name: es

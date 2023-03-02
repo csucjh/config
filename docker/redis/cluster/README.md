@@ -4,52 +4,7 @@
 
 # 一、结构如下
 
-## 1.1 docker-compose的网络
-
-### 1.1.1 docker-compose中project、service、container
-
-```
-Docker-Compose将所管理的容器分为三层，分别是工程（project），服务（service）以及容器（container）
-
-项目 (project)：由一组关联的应用容器组成的一个完整业务单元，在 docker-compose.yml 文件中定义。即是Compose的一个配置文件可以解析为一个项目，Compose通过分析指定配置文件，得出配置文件所需完成的所有容器管理与部署操作。
-
-服务 (service)：一个应用的容器，实际上可以包括若干运行相同镜像的容器实例。每个服务都有自己的名字、使用的镜像、挂载的数据卷、所属的网络、依赖哪些其他服务等等，即以容器为粒度，用户需要Compose所完成的任务。
-
-容器 (container)：一个运行起来的容器示例，可以通过docker ps -a看到的
-```
-
-### 1.1.2 network_mode
-
-```
-network_mode不会创建新网络
-
-network_mode: "bridge"    桥接模式，容器内部网络和宿主机网络桥接，不是一个网段
-network_mode: "host"      宿主机模式，容器直接使用宿主机网络
-network_mode: "none"      禁用网络，感觉没啥用
-network_mode: "service:[service name]"  共享docker-compose.yml中定义的services中的某个service的网络
-network_mode: "container:[container name/id]"  共享某个具体在运行中的容器实例的网络
-```
-
-### 1.1.3 networks
-
-```
-networks会创建新网络，名称为redis，类型是桥接
-networks:
-  redis:
-    driver: bridge
-```
-
-
-
 ## 1.2 docker-compose-host.yaml（使用宿主机网络）
-
-Windows下Docker desktop不能用host模式：参考[Use host networking (docker.com)](https://docs.docker.com/network/host/)
-
-```
-The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server.
-```
-
-host的配置文件如下：
 
 ```yaml
 version: '3'
@@ -295,6 +250,7 @@ services:
 networks:
   redis:
     driver: bridge
+    name: redis_cluster
 ```
 
 

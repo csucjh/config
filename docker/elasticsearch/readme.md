@@ -20,14 +20,9 @@
 2. 启动
 
 ```
-docker-compose:
-	-f 指定具体的配置文件
-	-p 指定compose的project name，默认就是所在目录名称
-
 ES集群：
-    启动：docker-compose -f docker-compose.yml up -d
-    停止：docker-compose -f docker-compose.yml stop
-    重启：docker-compose -f docker-compose.yml restart
+    启动：docker-compose up -d
+    卸载：docker-compose down
 ```
 
 3. 生成密码
@@ -193,7 +188,7 @@ sudo docker run -it \
 2. 重建集群
 
    ```
-   docker-compose -f docker-compose.yml up -d
+   docker-compose up -d
    ```
 
 3. 使用初始密码进入系统
@@ -260,7 +255,7 @@ sudo docker run -it \
 
    ```
    # 重启集群
-   docker-compose -f docker-compose.yml restart
+   docker-compose restart
    
    #临时密码已经失效
    http://localhost:9100/?auth_user=elastic&auth_password=7V5SYsKTf72RbSHN9RS9

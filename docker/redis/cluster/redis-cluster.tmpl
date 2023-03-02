@@ -1,0 +1,24 @@
+bind 0.0.0.0
+daemonize no
+protected-mode no
+port ${PORT}
+timeout 0
+save 900 1
+save 300 10
+save 60 10000
+rdbcompression yes
+dbfilename dump.rdb
+appendonly yes
+dir /data
+appendfsync everysec
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 10000
+cluster-announce-ip 192.168.1.6
+cluster-announce-port ${PORT}
+cluster-announce-bus-port 1${PORT}
+requirepass 123456
+masterauth 123456
+pidfile /var/run/redis.pid
+loglevel notice
+logfile "/logs/redis.log"

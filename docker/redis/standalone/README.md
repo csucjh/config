@@ -1,4 +1,4 @@
-# 使用docker-compose创建Redis
+# 使用docker-compose创建Redis单机模式
 
 版本信息：5.0.6
 
@@ -131,7 +131,7 @@ dbfilename dump.rdb
 dir /data
 appendonly yes
 appendfsync everysec
-requirepass 12345678
+requirepass 123456
 ```
 
 这个是根据自己需要设置的redis配置参数
@@ -156,7 +156,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 127.0.0.1:6379> 
 127.0.0.1:6379> keys *
 (error) NOAUTH Authentication required.
-127.0.0.1:6379> auth 12345678
+127.0.0.1:6379> auth 123456
 OK
 127.0.0.1:6379> keys *
 1) "name"
@@ -168,6 +168,6 @@ OK
 - docker ps 查看当前运行的服务
 - docker exec -it 6d784c652a20 redis-cli 连接redis服务
 - keys * 查看当前redis中的key
-- auth 12345678 验证密码
+- auth 123456 验证密码
 
 到此结束
